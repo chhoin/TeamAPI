@@ -1,0 +1,22 @@
+	.head{
+    	background-color: #3333ff;
+    	color: white;
+    	text-align: center;
+		padding-top:30px;
+		padding-bottom:30px;
+    }
+    .marginLR{
+    	margin-right: 0px;
+    	margin-left: 0px
+    }
+    .paddingLR{
+    	padding-left: 0px;
+    	padding-right: 0px;
+    }
+	.foot{
+		padding-bottom:20px;
+		background-color: #3333ff;
+    	color: white;
+		text-align: center;
+		padding-top:20px;
+	}
