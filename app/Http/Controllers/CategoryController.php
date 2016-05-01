@@ -52,16 +52,6 @@ class CategoryController extends Controller {
 	 */
 	public function all() {
 		
-		$category = $this->c->all();
-		if(!$category){
-			return response()->json(['STATUS'=> false ,'MESSAGE' => 'Not Found', 'CODE'=> 400], 200);
-		}else{
-			return response()->json([
-					'STATUS'=>'true',
-					'MESSAGE'=>'record found',
-					'DATA' => $category
-			], 200);
-		}
 	}
 	
 	/**
@@ -71,27 +61,7 @@ class CategoryController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(CategoryRequest $request) {
-		/* $this->c->cat_name = $request->category;
-		$this->c->save();
-		Session::flash('message', 'Insert Successful');
-		return redirect('category'); */
- 		$category = array (
-				[ 
-					'cat_name' => $request->get ( 'category' ),
-					'created_at' => date("Y/m/d") ,
-					'updated_at' => date("Y/m/d")
-				] 
-		);
-		$insert = $this->c->insert($category);
-		if($insert) {
-			return response()->json([
-					'STATUS'=> true,
-					'MESSAGE'=>'Cate was inserted',
-					'CODE' => 200
-			], 200);
-		}else{
-			return response()->json(['STATUS'=> false ,'MESSAGE' => 'Cate not insert', 'CODE'=> 400], 200);
-		}
+		
 	}
 	
 	/**
@@ -101,13 +71,7 @@ class CategoryController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id) {
-		$my_id = preg_replace ( '#[^0-9]#', '', $id );
-		if (! empty ( $my_id )) {
-			$cat = $this->c->where ( 'cat_id', $id )->first ();
-			return view ( 'admin.viewcategory', compact ( 'cat' ) );
-		} else {
-			return redirect ('category');
-		}
+		
 	}
 	
 	/**
@@ -117,14 +81,7 @@ class CategoryController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function edit($id) {
-		$my_id = preg_replace ('#[^0-9]#', '', $id );
-		if (!empty ($my_id)) {
-			$cat = $this->c->where ('cat_id', $id)->first();
-			return view ('admin.editcategory', compact('cat'));
-		} 
-		else {
-			return redirect ('category');
-		}
+		
 	}
 	
 	/**
@@ -135,15 +92,7 @@ class CategoryController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function update(CategoryRequest $request) {
-		$my_id = preg_replace ('#[^0-9]#', '', $request->id);
-		if (! empty ($my_id)) {
-			$this->c->where ('cat_id', $my_id )->update ( [ 
-					'cat_name' => $request->get ( 'category' ) 
-			] );
-			\Session::flash ('message', 'Update Successful');
-			return redirect ('category');
-		}
-		$this->edit ();
+		
 	}
 	
 	/**
@@ -153,14 +102,7 @@ class CategoryController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
-		$my_id = preg_replace ( '#[^0-9]#', '', $id );
-		if (! empty ( $my_id )) {
-			$this->c->where ( 'cat_id', $my_id )->delete ();
-			\Session::flash ( 'messageDelete', 'Delete Successful' );
-			return redirect ( 'category' );
-		} else {
-			return redirect ( 'category' );
-		}
+		
 	}
 	
 	/**
@@ -169,16 +111,6 @@ class CategoryController extends Controller {
 	 * @param SearchRequest $request        	
 	 */
 	public function search(SearchRequest $request) {
-		$key = $request->get( 'key' );
-		$category = $this->c->where ( 'cat_name', 'like', '%' . $key . '%' )->orderBy ( 'cat_id', 'desc' );
-		if(!$category){
-			return response()->json(['STATUS'=> false ,'MESSAGE' => 'Not Found', 'CODE'=> 400], 200);
-		}else{
-			return response()->json([
-					'STATUS'=>'true',
-					'MESSAGE'=>'record found',
-					'DATA' => $category
-			], 200);
-		}
+	
 	}
 }
