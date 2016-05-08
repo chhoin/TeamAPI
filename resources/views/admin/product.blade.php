@@ -162,8 +162,7 @@
 		</div>
 	</div>
 	@stop @section('foot')
-	<script
-		src="{{ asset('asset/jasny-bootstrap/js/jasny-bootstrap.min.js') }}"></script>
+	<script src="{{ asset('asset/jasny-bootstrap/js/jasny-bootstrap.min.js') }}"></script>
 	<script src="{{ asset('asset/js/bootpage.js') }}"></script>
 	<script src="{{ asset('asset/sweetalert/sweetalert.min.js') }}"></script>
 	<script type="text/javascript">		
