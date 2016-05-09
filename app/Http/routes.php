@@ -38,6 +38,14 @@ Route::group(['middleware' => ['web']], function () {
  * category for vuth 
  */
 Route::group(['middleware' => ['web']], function () {
+	Route::get ( '/category', 'CategoryController@index' );
+	Route::get ( '/categoryall', 'CategoryController@all' );
+	Route::get ( '/category/{id}', 'CategoryController@show' );
+	Route::delete ( '/category/{id}', 'CategoryController@destroy' );
+	Route::post ( '/category', 'CategoryController@store' );
+	Route::put ( '/category/{id}', 'CategoryController@update' );
+	Route::get ( '/category/page/{pageid}/item/{limit}', 'CategoryController@listCategory' );
+	Route::get ( '/category/page/{pageid}/item/{limit}/{key}', 'CategoryController@search' );
 	
 });
 

@@ -51,7 +51,21 @@ class CategoryController extends Controller {
 	 * Show all category
 	 */
 	public function all() {
-		
+		$category = $this->c->all();
+		if(!$category){
+			return response()->json([
+				'STATUS'=> false,
+				'MESSAGE'=> 'not founded',
+				'CODE'=> 400,
+			],200);
+		}
+		else{
+			return response()->json([
+				'STATUS'=> true,
+				'MESSAGE'=> 'Founded',
+				'DATA'=> $category,
+			],200);
+		}
 	}
 	
 	/**
@@ -61,7 +75,22 @@ class CategoryController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(CategoryRequest $request) {
-		
+		$category = $request->all();
+		$insert = $this->c->insert($category);
+		if($insert){
+			return response()->json([
+				'STATUS'=> true,
+				'MESSAGE'=> 'founded',
+				'CODE'=> 200,
+			],200);
+		}
+		else{
+			return response()->json([
+				'STATUS'=> false,
+				'MESSAGE'=> 'not founded',
+				'CODE'=> 404,
+			],200);
+		}
 	}
 	
 	/**
@@ -71,6 +100,22 @@ class CategoryController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id) {
+		$my_id=preg_replace('#[^0-9]#','',$id);
+		$category = $this->c->where('cat_id',$my_id)->first();
+		if($category){
+			return response()->json([
+				'STATUS'=> true,
+				'MESSAGE'=> 'founded',
+				'DATA'=> $category,
+			],200);
+		}
+		else{
+			return response()->json([
+				'STATUS'=> false,
+				'MESSAGE'=> 'not founded',
+				'CODE'=> 404,
+			],200);
+		}
 		
 	}
 	
@@ -91,8 +136,27 @@ class CategoryController extends Controller {
 	 * @param int $id        	
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(CategoryRequest $request) {
-		
+	public function update(CategoryRequest $request,$id) {
+			$my_id = preg_replace('#[^0-9]#','',$id);
+                $myUpdate = $this->c->where('cat_id',$my_id)->first();
+                if($myUpdate){
+                    $this->c->where('cat_id',$my_id)
+                            ->update([
+                                'cat_name' => $request->get('cat_name')
+                            ]);
+                    return response()->json([
+                        'STATUS'=> true,
+                        'MASSAGE'=> 'Updated!',
+                        'CODE'=> 200
+                    ],200);
+                }
+                else{
+                    return response()->json([
+                        'STATUS'=> false,
+                        'MASSAGE'=> 'Not found',
+                        'CODE'=> 404
+                    ],200);
+                }
 	}
 	
 	/**
@@ -102,15 +166,110 @@ class CategoryController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function destroy($id) {
-		
+		$my_id=preg_replace('#[^0-9]#','',$id);
+		$category = $this->c->where('cat_id',$my_id)->delete();
+		if(!empty($my_id)&&$category){
+			return response()->json([
+					'STATUS'=> true,
+					'MASSAGE'=> 'Deleted!',
+					'CODE'=> 200
+				],200);
+		}
+		else{
+			return response()->json([
+				'STATUS'=> false,
+				'MASSAGE'=> 'Not found',
+				'CODE'=> 404
+			],200);
+		}
 	}
 	
 	/**
 	 * search
 	 *
-	 * @param SearchRequest $request        	
+	 * @param
 	 */
-	public function search(SearchRequest $request) {
-	
+	public function search( $page,$limit, $key) {
+		$key = preg_replace('#[^a-zA-Z\s-_]#','',$key);
+		$limit = preg_replace('#[^0-9]#','',$limit);
+		$page = preg_replace('#[^0-9]#','',$page);
+
+		$totalpage=0;
+		$offset = $page/$limit -$limit;
+		$count =$this->c->where('cat_name','like',$key.'%')->count();
+
+		if($count %$limit >0){
+			$totalpage= floor($count /$limit) + 1;
+		}
+		else{
+			$totalpage= $count /$limit;
+		}
+		$pagination =[
+			'TOTALPAGE' => $totalpage,
+			'TOTALRECORD' => $count,
+			'CURRENTPAGE' => $page,
+			'SHOWITEM' => $limit
+		];
+		$category = $this->c->where ( 'cat_name', 'like',  $key . '%' )->skip($offset)->take($limit)->orderBy('cat_id', 'desc')->get();
+
+		if(!$category  || $page > $totalpage){
+			return response()->json([
+				'STATUS'=>  false ,
+				'MESSAGE' => 'Not Found',
+				'CODE'=> 400
+			], 200);
+		}else{
+			return response()->json([
+				'STATUS'=> true ,
+				'MESSAGE'=>'record found',
+				'DATA' => $category,
+				'PAGINATION' => $pagination
+			], 200);
+		}
 	}
+
+	/***********
+	 * list product
+	 *
+	 *
+	 */
+	public function listCategory($page, $limit){
+		$page = preg_replace('#[^0-9]#','',$page);
+		$limit = preg_replace('#[^0-9]#','',$limit);
+		$offset = $page*$limit -$limit;
+
+		$count = $this->c->count();
+		$totalpage = 0;
+		if($count % $limit > 0){
+			$totalpage = floor($count / $limit) +1;
+		}
+		else{
+			$totalpage = $count / $limit;
+		}
+
+		$pagination =[
+				'TOTALPAGE' => $totalpage,
+				'TOTALRECORD' => $count,
+				'CURRENTPAGE' => $page,
+				'SHOWITEM' => $limit
+		];
+		$category = $this->c->skip($offset)->take($limit)->orderBy('cat_id','desc')->get();
+		if(!$category || $page > $totalpage){
+			return response()->json([
+				'STATUS' => false,
+				'MESSAGE'=> 'Not found',
+				'CODE' 	=> '404'
+			],200);
+		}
+		else{
+			return response()->json([
+				'STATUS' => true,
+				'MESSAGE'=> 'Record found',
+				'DATA' => $category,
+				'PAGINATION'=>$pagination
+			],200);
+		}
+
+	}
+
 }
