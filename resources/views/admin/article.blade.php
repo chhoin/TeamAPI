@@ -62,10 +62,13 @@
                                     <th width="20%">Activity</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody >
 
                                 </tbody>
                             </table>
+                            <div id="show">
+
+                            </div>
 
                             <div class="text-center">
                                 <div id="pagination"></div>
@@ -138,22 +141,15 @@
             </div>
         </div>
     </div>
-@stop @section('footer')
+@stop @section('foot')
     <script src="{{ asset('asset/jasny-bootstrap/js/jasny-bootstrap.min.js') }}"></script>
     <script src="{{ asset('asset/js/bootpage.js') }}"></script>
     <script src="{{ asset('asset/sweetalert/sweetalert.min.js') }}"></script>
     <script type="text/javascript">
-        $(document).on('ready', function() {
-            $("#input-24").fileinput({
-                initialPreview: [
-                    '<img src="/images/moon.jpg" class="file-preview-image" alt="The Moon" title="The Moon">',
-                    '<img src="/images/earth.jpg" class="file-preview-image" alt="The Earth" title="The Earth">'
-                ],
-                overwriteInitial: false,
-                maxFileSize: 100,
-                initialCaption: "The Moon and the Earth"
-            });
-        });
-    </script>
+            myload();
+        function myload(){
+            $.ajax({
+            })
+        }
     </script>
 @stop
