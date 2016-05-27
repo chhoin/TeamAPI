@@ -139,10 +139,10 @@ class ProductController extends Controller
             ] );
     		
     			return response()->json([
-    					'STATUS'=> true,
-    					'MESSAGE'=>'Product was updated',
-    					'CODE' => 200
-    			], 200);
+					    					'STATUS'=> true,
+					    					'MESSAGE'=>'Product was updated',
+					    					'CODE' => 200
+					    			], 200);
     	}
     }
 
